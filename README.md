@@ -20,7 +20,7 @@ A simple **Terminal User Interface (TUI)** to monitor **real-time network speed 
 - Rust & Cargo installed → [Install Rust](https://www.rust-lang.org/tools/install)
 
 ### Clone and Build
-![install](https://github.com/user-attachments/assets/5a8bc369-5fed-4277-8429-3227d272751d)
+![install](https://github.com/user-attachments/assets/4ecfe587-fd9e-49cf-af54-1abbdcb80899)
 
 ###⚡ Usage
 
