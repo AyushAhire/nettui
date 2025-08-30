@@ -11,3 +11,4 @@ crossterm = "0.27"
 sysinfo = { version = "0.37", default-features = false, features = ["network"] }
 anyhow = "1"
 humansize = "2"
+clap = { version = "4.5.46", features = ["derive"] }

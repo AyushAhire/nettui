@@ -14,7 +14,13 @@ use ratatui::widgets::{Block, BorderType, Borders, Paragraph, Row, Table};
 use ratatui::Terminal;
 
 use sysinfo::Networks;
+use clap::Parser;
 
+#[derive(Parser, Debug)]
+#[command(name="nettui", about="Network TUI Monitor")]
+struct Args {
+    iface: Vec<String>,
+}
 
 #[derive(Clone, Debug)]
 struct RowData {
@@ -48,7 +54,7 @@ fn human_bps(bps: f64) -> String {
     }
 }
 
-fn collect(networks: &mut Networks, interval_secs: f64, _show_virtual: bool) -> Vec<RowData> {
+fn collect(networks: &mut Networks, interval_secs: f64, _show_virtual: bool, iface_filters: &Vec<String>) -> Vec<RowData> {
     //if interval is 0, convert to 1, as we will be divinding it, can't divide by zero
     let interval_secs = if interval_secs <=0.0 {1.0} else { interval_secs };
 
@@ -66,6 +72,10 @@ fn collect(networks: &mut Networks, interval_secs: f64, _show_virtual: bool) -> 
             || name.starts_with("virbr");
 
         if !is_virtual && is_virtual {
+            continue;
+        }
+
+        if !iface_filters.is_empty() && !iface_filters.contains(&name.to_string()) {
             continue;
         }
 
@@ -115,6 +125,8 @@ fn main() -> Result<(), io::Error> {
     let mut show_virtual = false;
     let mut last = Instant::now();
 
+    let args = Args::parse();
+    let iface_filters = args.iface;
 
 // collect snapshot used by the UI
 
@@ -125,7 +137,7 @@ fn main() -> Result<(), io::Error> {
             std::thread::sleep(Duration::from_millis(10));
             continue;
         }
-    let rows = collect(&mut networks, elapsed, show_virtual);
+    let rows = collect(&mut networks, elapsed, show_virtual, &iface_filters);
 
 
         //check for quit event
